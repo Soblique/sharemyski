@@ -18,6 +18,7 @@ module.exports = function (sequelize, DataTypes) {
         // The password cannot be null
         password: {
             type: DataTypes.STRING,
+            defaultValue: "N/A",
             allowNull: false
         },
         fb_id: {
@@ -85,9 +86,9 @@ module.exports = function (sequelize, DataTypes) {
     };
 
     // Check to see if user is an admin
-    User.prototype.isAdmin = function (id) {
-        return bcrypt.compareSync(password, this.password);
-    };
+    // User.prototype.isAdmin = function (id) {
+    //     return bcrypt.compareSync(password, this.password);
+    // };
     // Hooks are automatic methods that run during various phases of the User Model lifecycle
     // In this case, before a User is created, we will automatically hash their password
     User.addHook("beforeCreate", function (user) {

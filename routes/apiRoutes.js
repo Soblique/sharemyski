@@ -8,7 +8,7 @@ module.exports = function (app) {
     let id = req.params.id;
     if (id) {
       db.Item.findOne({
-        where: [{id: id}],
+        where: [{ id: id }],
         include: [db.User, db.Category]
       }).then(function (dbItem) {
         console.log(dbItem);
@@ -28,7 +28,7 @@ module.exports = function (app) {
     let id = req.params.id;
     if (id) {
       db.User.findOne({
-        where: [{id: id}]
+        where: [{ id: id }]
       }).then(function (dbUser) {
         res.json(dbUser);
       });
@@ -44,7 +44,7 @@ module.exports = function (app) {
     let id = req.params.id;
     if (id) {
       db.Transaction.findOne({
-        where: [{id: id}]
+        where: [{ id: id }]
       }).then(function (dbTransaction) {
         res.json(dbTransaction);
       });
@@ -55,26 +55,11 @@ module.exports = function (app) {
     }
   });
 
-  app.get("/api/location/:id?", function (req, res) {
-    let id = req.params.id;
-    if (id) {
-      db.Location.findOne({
-        where: [{id: id}]
-      }).then(function (dbLocation) {
-        res.json(dbLocation);
-      });
-    } else {
-      db.Location.findAll({}).then(function (dbLocation) {
-        res.json(dbLocation);
-      });
-    }
-  });
-
   app.get("/api/category/:id?", function (req, res) {
     let id = req.params.id;
     if (id) {
       db.Category.findOne({
-        where: [{id: id}]
+        where: [{ id: id }]
       }).then(function (dbCategory) {
         res.json(dbCategory);
       });
@@ -88,7 +73,7 @@ module.exports = function (app) {
   });
 
   // Create a new example
-  app.post("/api/stuff", function (req, res) {
+  app.post("/api/item", function (req, res) {
     db.Example.create(req.body).then(function (dbExample) {
       res.json(dbExample);
     });
@@ -97,47 +82,47 @@ module.exports = function (app) {
 
 
   // Delete an example by id
-  app.delete("/api/stuff/:id", function (req, res) {
-    db.Example.destroy({
+  app.delete("/api/item/:id", function (req, res) {
+    db.item.destroy({
       where: {
         id: req.params.id
       }
-    }).then(function (dbExample) {
-      res.json(dbExample);
+    }).then(function (dbItem) {
+      res.json(dbItem);
     });
   });
 
   // Using the passport.authenticate middleware with our local strategy.
   // If the user has valid login credentials, send them to the members page.
   // Otherwise the user will be sent an error
-  app.post("/api/login", passport.authenticate("local"), function(req, res) {
+  app.post("/api/login", passport.authenticate("local"), function (req, res) {
     res.json(req.user);
   });
 
   // Route for signing up a user. The user's password is automatically hashed and stored securely thanks to
   // how we configured our Sequelize User Model. If the user is created successfully, proceed to log the user in,
   // otherwise send back an error
-  app.post("/api/signup", function(req, res) {
+  app.post("/api/signup", function (req, res) {
     db.User.create({
       email: req.body.email,
       password: req.body.password
     })
-      .then(function() {
+      .then(function () {
         res.redirect(307, "/api/login");
       })
-      .catch(function(err) {
+      .catch(function (err) {
         res.status(401).json(err);
       });
   });
 
   // Route for logging user out
-  app.get("/logout", function(req, res) {
+  app.get("/logout", function (req, res) {
     req.logout();
     res.redirect("/");
   });
 
   // Route for getting some data about our user to be used client side
-  app.get("/api/user_data", function(req, res) {
+  app.get("/api/user_data", function (req, res) {
     if (!req.user) {
       // The user is not logged in, send back an empty object
       res.json({});
